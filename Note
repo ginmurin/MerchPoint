@@ -1,0 +1,4 @@
+git clone https://github.com/ginmurin/MerchPoint.git
+cd MerchPoint
+npm install
+npm run dev   # (or npm start if CRA)
