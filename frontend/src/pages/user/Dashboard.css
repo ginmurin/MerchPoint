@@ -1,0 +1,72 @@
+.dashboard-title {
+  color: var(--primary-maroon);
+  margin-bottom: 2rem;
+}
+
+.dashboard-points-box {
+  background: linear-gradient(135deg, var(--primary-gold) 0%, #ffc107 100%);
+  color: var(--primary-maroon);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+}
+
+.dashboard-points-value {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.dashboard-points-label {
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  margin-bottom: 3rem;
+}
+
+.dashboard-recent-title {
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.status-pending {
+  background-color: var(--accent-gold-light);
+  color: #a18200;
+}
+.status-approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+.status-rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Points Text */
+.status-points-used {
+  color: var(--danger-red);
+  font-weight: 500;
+}
+.status-points-earned {
+  color: var(--success-green);
+  font-weight: 500;
+}
+.status-points-refunded {
+  color: #555;
+  font-weight: 500;
+}

@@ -1,0 +1,106 @@
+.points-history-title {
+  color: var(--primary-maroon);
+  margin-bottom: 2rem;
+}
+
+.points-history-box {
+  background: linear-gradient(135deg, var(--primary-gold) 0%, #ffc107 100%);
+  color: var(--primary-maroon);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+}
+
+.points-history-value {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.points-history-label {
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.points-history-filter-section {
+  background: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.points-history-filter-label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.points-history-filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.points-history-filter-btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+  background: var(--bg-grey);
+  color: #555;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.points-history-filter-btn:hover {
+  background: var(--accent-gold-light);
+  border-color: var(--primary-gold);
+}
+
+.points-history-filter-btn.active {
+  background: var(--primary-maroon);
+  color: white;
+  border-color: var(--primary-maroon);
+}
+
+/* Table specific styles */
+.points-history-time {
+  font-size: 12px;
+  color: #777;
+  display: block;
+}
+
+.points-history-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.points-history-status.earned {
+  background: var(--accent-gold-light);
+  color: #8c7300;
+}
+.points-history-status.redeemed {
+  background: #ffebeB;
+  color: var(--danger-red);
+}
+.points-history-status.refund {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.points-history-earned {
+  color: var(--success-green);
+  font-size: 16px;
+}
+
+.points-history-redeemed {
+  color: var(--danger-red);
+  font-size: 16px;
+}

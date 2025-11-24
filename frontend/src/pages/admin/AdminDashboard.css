@@ -1,0 +1,52 @@
+.admin-title {
+  color: var(--primary-maroon);
+  margin-bottom: 2rem;
+}
+
+.admin-grid-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.admin-card {
+  background: white;
+  padding: 25px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+}
+
+.admin-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.admin-activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: var(--bg-grey);
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+}
+
+.admin-activity-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.admin-activity-meta {
+  font-size: 13px;
+  color: #555;
+}
+
+.admin-activity-time {
+  font-size: 12px;
+  color: #777;
+  flex-shrink: 0;
+  margin-left: 15px;
+}

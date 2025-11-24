@@ -1,0 +1,47 @@
+.admin-header {
+  background-color: var(--text-dark);
+}
+
+.admin-header .header-logo {
+  color: var(--primary-gold);
+}
+
+.admin-header .header-nav-item {
+  color: #ccc;
+}
+
+.admin-header .header-nav-item:hover {
+  background-color: #444;
+  color: white;
+}
+
+.admin-header .header-nav-item.active {
+  background-color: var(--primary-gold);
+  color: var(--text-dark);
+}
+
+.admin-header .header-user-name {
+  color: white;
+}
+
+.admin-header-tag {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-maroon);
+  background-color: var(--primary-gold);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.admin-header-role {
+  font-size: 12px;
+  color: #999;
+}
+
+.admin-header-avatar {
+  background-color: var(--primary-gold);
+  color: var(--primary-maroon);
+  border-color: var(--bg-light);
+}

@@ -1,0 +1,15 @@
+.register-box {
+  max-width: 600px;
+}
+
+.register-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.register-button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}

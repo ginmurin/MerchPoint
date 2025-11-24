@@ -1,0 +1,4 @@
+.layout-main-content {
+  /* Offset content below fixed header */
+  padding-top: var(--header-height); 
+}

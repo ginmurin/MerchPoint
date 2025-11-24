@@ -1,0 +1,28 @@
+.stat-card {
+  background: white;
+  padding: 25px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  text-align: center;
+}
+
+.stat-card-value {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.stat-card-value.maroon {
+  color: var(--primary-maroon);
+}
+
+.stat-card-value.gold {
+  color: var(--primary-gold);
+}
+
+.stat-card-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+}

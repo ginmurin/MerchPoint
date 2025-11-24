@@ -1,0 +1,117 @@
+.header {
+  height: var(--header-height);
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.header-container {
+  width: 100%;
+  max-width: var(--container-width);
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-maroon);
+  text-decoration: none;
+}
+
+.header-nav-menu {
+  display: flex;
+  gap: 10px;
+}
+
+.header-nav-item {
+  padding: 10px 20px;
+  font-weight: 600;
+  color: #555;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+}
+
+.header-nav-item:hover {
+  background-color: var(--accent-gold-light);
+  color: var(--primary-maroon);
+}
+
+.header-nav-item.active {
+  background-color: var(--primary-maroon);
+  color: var(--text-light);
+}
+
+.header-user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-user-details {
+  text-align: right;
+}
+
+.header-user-name {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.header-user-points {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-gold);
+}
+
+.header-user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--primary-maroon);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border: 2px solid var(--primary-gold);
+}
+
+.header-user-info-link {
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  padding: 5px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.header-user-info-link:hover {
+  background-color: var(--bg-grey);
+}
+
+.header-logout-btn {
+  padding: 10px 20px;
+  font-weight: 600;
+  color: #555;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit;
+  margin-left: 10px;
+}
+
+.header-logout-btn:hover {
+  background-color: #f8d7da; /* Light red */
+  color: var(--danger-red);
+}

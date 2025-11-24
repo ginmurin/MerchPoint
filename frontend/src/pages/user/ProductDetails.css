@@ -1,0 +1,132 @@
+.product-details-back-btn {
+  margin-bottom: 2rem;
+}
+
+.product-details-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 40px;
+}
+
+.product-details-image-wrapper {
+  width: 100%;
+}
+
+.product-details-image {
+  width: 100%;
+  height: 450px;
+  background: linear-gradient(135deg, var(--accent-gold-light) 0%, #eee 100%);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #888;
+  font-size: 1.5rem;
+  position: sticky;
+  top: 100px; /* header height + padding */
+}
+
+.product-details-info {
+  width: 100%;
+}
+
+.product-details-name {
+  font-size: 32px;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.product-details-price {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary-maroon);
+  margin-bottom: 10px;
+}
+
+.product-details-points {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-gold);
+  margin-bottom: 25px;
+}
+
+.product-details-stock-box {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  font-weight: 600;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.product-details-stock-status {
+  width: 12px;
+  height: 12px;
+  background-color: var(--success-green);
+  border-radius: 50%;
+}
+
+.product-details-actions {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  align-items: flex-end;
+}
+
+.product-details-qty {
+  width: 120px;
+}
+
+.product-details-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.product-details-add-btn {
+  flex: 1;
+  padding: 14px;
+}
+
+.product-details-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  padding: 25px;
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+}
+
+.product-details-card-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--text-dark);
+}
+
+.product-details-card-body {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.product-details-spec-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  font-size: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.product-details-spec-row:last-child {
+  border-bottom: none;
+}
+.product-details-spec-row strong {
+  color: #333;
+}
+.product-details-spec-row span {
+  color: #666;
+}

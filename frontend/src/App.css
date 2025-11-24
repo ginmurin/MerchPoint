@@ -1,0 +1,154 @@
+/* MerchPoint Global Stylesheet
+  Theme: Maroon and Gold
+*/
+
+:root {
+  /* Color Palette */
+  --primary-maroon: #800000; /* Deep maroon */
+  --primary-gold: #FFD700;   /* Bright gold */
+  --accent-gold-light: #FBF3D5; /* Light gold for backgrounds */
+  --text-dark: #222222;
+  --text-light: #ffffff;
+  --bg-light: #fdfcf9;
+  --bg-grey: #f4f4f4;
+  --border-color: #e0e0e0;
+  --success-green: #28a745;
+  --danger-red: #dc3545;
+  --pending-yellow: #ffc107;
+
+  /* Sizing */
+  --header-height: 70px;
+  --container-width: 1200px;
+  --border-radius: 8px;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --card-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-maroon);
+  font-weight: 600;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Base Button */
+.button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.button-primary {
+  background: linear-gradient(135deg, var(--primary-maroon) 0%, #a00000 100%);
+  color: var(--text-light);
+}
+.button-primary:hover {
+  opacity: 0.9;
+  box-shadow: 0 4px 15px rgba(128, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.button-secondary {
+  background-color: var(--bg-grey);
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
+}
+.button-secondary:hover {
+  background-color: #e9e9e9;
+}
+
+/* Base Form Inputs */
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  transition: all 0.3s;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--primary-maroon);
+  box-shadow: 0 0 0 3px var(--accent-gold-light);
+}
+
+/* Utility Classes */
+.container {
+  max-width: var(--container-width);
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+/* Base Table Styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.table th,
+.table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table thead {
+  background-color: var(--primary-maroon);
+  color: var(--text-light);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr:hover {
+  background-color: var(--accent-gold-light);
+}
+
+/* Validation Error Styles */
+.error-text {
+  color: var(--danger-red);
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 5px;
+  display: block;
+}
+
+.input-error {
+  border-color: var(--danger-red);
+  background-color: #fff8f8;
+}
+
+.input-error:focus {
+  border-color: var(--danger-red);
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}

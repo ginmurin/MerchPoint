@@ -1,0 +1,77 @@
+.res-details-box {
+  background: white;
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  margin-bottom: 25px;
+}
+
+.res-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.res-details-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.res-details-code {
+  color: #666;
+  font-size: 14px;
+  margin-top: 5px;
+}
+.res-details-code strong {
+  color: var(--primary-maroon);
+}
+
+.res-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.res-details-subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.res-details-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  margin-bottom: 15px;
+  padding: 10px 0;
+}
+
+.res-details-label {
+  font-weight: 600;
+  color: #555;
+}
+
+.res-details-value {
+  color: #333;
+}
+
+.res-details-row.total {
+  border-top: 2px solid var(--text-dark);
+  padding-top: 15px;
+  margin-top: 10px;
+}
+.res-details-row.total .res-details-label {
+  font-size: 18px;
+  color: #333;
+}
+.res-details-value.total-price {
+  font-size: 24px;
+  color: var(--primary-maroon);
+  font-weight: 700;
+}
+
+/* Reusing .status-badge, .status-points-x from Dashboard.css */
