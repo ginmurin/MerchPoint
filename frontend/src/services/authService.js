@@ -12,41 +12,48 @@ const setUser = (user) => {
   localStorage.setItem('user', JSON.stringify(user));
 };
 
-// --- AUTH FUNCTIONS ---
-export const login = async (email, password) => {
-  console.log('Attempting login for:', email);
-  // Mock response
-  await new Promise(resolve => setTimeout(resolve, 500));
-
-  let user = null;
-  if (email === 'admin@merch.com' && password === 'admin123') {
-    user = { name: 'Admin User', email: 'admin@merch.com', role: 'admin' };
-  } else if (email === 'user@merch.com' && password === 'user123') {
-    user = { name: 'John Doe', email: 'user@merch.com', role: 'user' };
-  }
-
-  if (user) {
-    setUser(user); // <-- This is the key change
-    return user;
-  }
-  
-  throw new Error('Invalid credentials');
-};
-
-export const register = async (userData) => {
-  console.log('Attempting registration for:', userData.email);
-  // Mock response
-  await new Promise(resolve => setTimeout(resolve, 500));
-  if (userData.email === 'user@merch.com') {
-    throw new Error('Email already exists');
-  }
-  
-  const user = { name: userData.fullName, email: userData.email, role: 'user' };
-  setUser(user); // <-- This is the key change
-  return user;
-};
-
 export const logout = () => {
   localStorage.removeItem('user'); // <-- This is the key change
   console.log('User logged out');
+};
+
+// Register user endpoint
+export const register = async (userData) => {
+  try {
+    const response = await api.post('auth/register', {
+      username: userData.username,
+      email: userData.email,
+      password: userData.password,
+      fullName: userData.fullName,
+      phoneNumber: userData.contactNumber,
+      address: userData.department,
+      studentStaffId: userData.studentId
+    });
+    // POST http://localhost:8080/api/auth/register
+    
+    // Save user to localStorage after successful registration
+    setUser(response);
+    return response;
+  } catch (error) {
+    console.error('Registration error:', error);
+    throw error;
+  }
+};
+
+// Login endpoint - supports both email and username
+export const login = async (emailOrUsername, password) => {
+  try {
+    const response = await api.post('auth/login', { 
+      email: emailOrUsername,
+      password 
+    });
+    
+    console.log('Login response from backend:', response);
+    console.log('User role:', response.role);
+    setUser(response);
+    return response;
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
 };

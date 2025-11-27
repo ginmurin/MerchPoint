@@ -18,6 +18,7 @@ import './pages/admin/AdminDashboard.css';
 import './pages/admin/AdminProducts.css';
 import './pages/admin/AdminReservations.css';
 import './pages/user/UserProfile.css';
+import './pages/admin/UserManagement.css';
 
 // Import all component-specific CSS files globally
 import './components/common/Header.css';

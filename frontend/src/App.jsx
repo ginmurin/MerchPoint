@@ -19,6 +19,9 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminReservations from './pages/admin/AdminReservations';
 import UserProfile from './pages/user/UserProfile';
+import UserManagement from './pages/admin/UserManagement';
+import UserList from './pages/admin/UserList';
+import ProductManagement from './pages/admin/ProductManagement';
 function App() {
   return (
     <Routes>
@@ -43,8 +46,10 @@ function App() {
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboard />} />
-        <Route path="products" element={<AdminProducts />} />
+        <Route path="products" element={<ProductManagement />} />
         <Route path="reservations" element={<AdminReservations />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="user-list" element={<UserList />} />
       </Route>
 
       {/* 404 Not Found */}

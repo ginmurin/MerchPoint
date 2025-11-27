@@ -39,10 +39,15 @@ const Login = () => {
 
     try {
       const user = await login(formData.email, formData.password);
+      console.log('User received in Login.jsx:', user);
+      console.log('User role check:', user.role, 'Is admin?', user.role === 'admin');
+      
       // Redirect based on role
       if (user.role === 'admin') {
+        console.log('Redirecting to admin dashboard');
         navigate('/admin/dashboard');
       } else {
+        console.log('Redirecting to user dashboard');
         navigate('/dashboard');
       }
     } catch (error) {

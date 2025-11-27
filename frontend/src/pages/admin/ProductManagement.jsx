@@ -1,0 +1,298 @@
+import React, { useState, useEffect } from 'react';
+import productService from '../../services/productService';
+import categoryService from '../../services/categoryService';
+
+const ProductManagement = () => {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [formData, setFormData] = useState({
+    productName: '',
+    description: '',
+    price: '',
+    pointsRequired: '',
+    stockQuantity: '',
+    imageUrl: '',
+    categoryId: ''
+  });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [productsData, categoriesData] = await Promise.all([
+        productService.getAllProducts(),
+        categoryService.getAllCategories()
+      ]);
+      setProducts(productsData);
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      alert('Failed to load data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const productData = {
+        productName: formData.productName,
+        description: formData.description || '',
+        price: parseFloat(formData.price),
+        pointsRequired: parseInt(formData.pointsRequired),
+        pointsValue: parseInt(formData.pointsRequired),
+        stockQuantity: parseInt(formData.stockQuantity),
+        imageUrl: formData.imageUrl || '',
+        category: { categoryId: parseInt(formData.categoryId) }
+      };
+
+      if (editingProduct) {
+        await productService.updateProduct(editingProduct.productId, productData);
+        alert('Product updated successfully');
+      } else {
+        await productService.createProduct(productData);
+        alert('Product created successfully');
+      }
+
+      resetForm();
+      fetchData();
+    } catch (error) {
+      console.error('Error saving product:', error);
+      alert('Failed to save product');
+    }
+  };
+
+  const handleEdit = (product) => {
+    setEditingProduct(product);
+    setFormData({
+      productName: product.productName,
+      description: product.description || '',
+      price: product.price.toString(),
+      pointsRequired: product.pointsRequired.toString(),
+      stockQuantity: product.stockQuantity.toString(),
+      imageUrl: product.imageUrl || '',
+      categoryId: product.category?.categoryId?.toString() || ''
+    });
+    setShowModal(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await productService.deleteProduct(id);
+        alert('Product deleted successfully');
+        fetchData();
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('Failed to delete product');
+      }
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      productName: '',
+      description: '',
+      price: '',
+      pointsRequired: '',
+      stockQuantity: '',
+      imageUrl: '',
+      categoryId: ''
+    });
+    setEditingProduct(null);
+    setShowModal(false);
+  };
+
+  return (
+    <div className="container">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <h1 className="admin-title">Product Management</h1>
+        <button className="button button-primary" onClick={() => setShowModal(true)}>
+          ➕ Add Product
+        </button>
+      </div>
+
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>
+      ) : (
+        <div className="admin-card">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Points</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.length > 0 ? (
+                products.map(product => (
+                  <tr key={product.productId}>
+                    <td>{product.productId}</td>
+                    <td><strong>{product.productName}</strong></td>
+                    <td>{product.category?.categoryName || 'N/A'}</td>
+                    <td>₱{product.price.toFixed(2)}</td>
+                    <td>{product.pointsRequired}</td>
+                    <td>
+                      <span className={`status-badge ${
+                        product.stockQuantity < 5 ? 'status-rejected' :
+                        product.stockQuantity < 10 ? 'status-pending' :
+                        'status-approved'
+                      }`}>
+                        {product.stockQuantity}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        className="button button-secondary"
+                        style={{ marginRight: '0.5rem', padding: '0.3rem 0.8rem' }}
+                        onClick={() => handleEdit(product)}
+                      >
+                        ✏️ Edit
+                      </button>
+                      <button
+                        className="button button-secondary"
+                        style={{ padding: '0.3rem 0.8rem' }}
+                        onClick={() => handleDelete(product.productId)}
+                      >
+                        🗑️ Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>
+                    No products found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="modal-overlay" onClick={resetForm}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="productName">Product Name *</label>
+                <input
+                  type="text"
+                  id="productName"
+                  name="productName"
+                  value={formData.productName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Description</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows="3"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="categoryId">Category *</label>
+                <select
+                  id="categoryId"
+                  name="categoryId"
+                  value={formData.categoryId}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select a category</option>
+                  {categories.map(cat => (
+                    <option key={cat.categoryId} value={cat.categoryId}>
+                      {cat.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="price">Price (₱) *</label>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="pointsRequired">Points Required *</label>
+                  <input
+                    type="number"
+                    id="pointsRequired"
+                    name="pointsRequired"
+                    value={formData.pointsRequired}
+                    onChange={handleInputChange}
+                    min="0"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="stockQuantity">Stock Quantity *</label>
+                <input
+                  type="number"
+                  id="stockQuantity"
+                  name="stockQuantity"
+                  value={formData.stockQuantity}
+                  onChange={handleInputChange}
+                  min="0"
+                  required
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="button button-secondary" onClick={resetForm}>
+                  Cancel
+                </button>
+                <button type="submit" className="button button-primary">
+                  {editingProduct ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ProductManagement;
