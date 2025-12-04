@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
+import Notification from '../../components/common/Notification';
+import { useNotification } from '../../hooks/useNotification';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { notification, showNotification, hideNotification } = useNotification();
 
   useEffect(() => {
     fetchUsers();
@@ -16,29 +19,29 @@ const UserList = () => {
       setUsers(data);
     } catch (error) {
       console.error('Error fetching users:', error);
-      alert('Failed to load users');
+      showNotification('Failed to load users', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   const handleAddUser = () => {
-    alert('Add User feature is not yet available');
+    showNotification('Add User feature coming soon', 'info');
   };
 
   const handleEditUser = (userId) => {
-    alert(`Edit User ${userId} feature is not yet available`);
+    showNotification('Edit User feature coming soon', 'info');
   };
 
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         await api.delete(`user/${userId}`);
-        alert('User deleted successfully');
+        showNotification('User deleted successfully!', 'success');
         fetchUsers();
       } catch (error) {
         console.error('Error deleting user:', error);
-        alert('Failed to delete user');
+        showNotification(error.message || 'Failed to delete user', 'error');
       }
     }
   };
@@ -110,6 +113,14 @@ const UserList = () => {
             </tbody>
           </table>
         </div>
+      )}
+
+      {notification && (
+        <Notification 
+          message={notification.message} 
+          type={notification.type} 
+          onClose={hideNotification} 
+        />
       )}
     </div>
   );

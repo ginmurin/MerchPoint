@@ -2,10 +2,15 @@
 // You would typically use a library like axios
 const BASE_URL = 'http://localhost:8080/api';
 
+const getUserRole = () => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  return user.role || 'guest';
+};
+
 const handleResponse = async (response) => {
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Something went wrong');
+    const error = await response.json().catch(() => ({ message: 'Request failed' }));
+    throw new Error(error.message || error.error || 'Something went wrong');
   }
   return response.json();
 };
@@ -18,6 +23,7 @@ export const api = {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token || ''}`,
+        'X-User-Role': getUserRole(),
       },
     });
     return handleResponse(response);
@@ -30,6 +36,7 @@ export const api = {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token || ''}`,
+        'X-User-Role': getUserRole(),
       },
       body: JSON.stringify(data),
     });
@@ -43,6 +50,7 @@ export const api = {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token || ''}`,
+        'X-User-Role': getUserRole(),
       },
       body: JSON.stringify(data),
     });
@@ -56,6 +64,7 @@ export const api = {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token || ''}`,
+        'X-User-Role': getUserRole(),
       },
     });
     

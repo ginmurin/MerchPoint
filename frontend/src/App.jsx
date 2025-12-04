@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
 
 // Import Layouts
 import Layout from './components/layout/Layout';
@@ -22,9 +23,11 @@ import UserProfile from './pages/user/UserProfile';
 import UserManagement from './pages/admin/UserManagement';
 import UserList from './pages/admin/UserList';
 import ProductManagement from './pages/admin/ProductManagement';
+
 function App() {
   return (
-    <Routes>
+    <CartProvider>
+      <Routes>
       {/* Auth Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
@@ -54,7 +57,8 @@ function App() {
 
       {/* 404 Not Found */}
       <Route path="*" element={<h1 style={{ textAlign: 'center', marginTop: '5rem' }}>404: Page Not Found</h1>} />
-    </Routes>
+      </Routes>
+    </CartProvider>
   );
 }
 

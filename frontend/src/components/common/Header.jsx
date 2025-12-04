@@ -1,22 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom'; // 1. Import useNavigate
-import { logout, getCurrentUser } from '../../services/authService'; // 2. Import logout and getCurrentUser
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { logout, getCurrentUser } from '../../services/authService';
+import { getUserById } from '../../services/userService';
+import { useCart } from '../../context/CartContext';
 
 const Header = () => {
-  // 3. Get the real user data
   const [user, setUser] = useState({ name: 'Guest', points: 0, initials: '?' });
   const navigate = useNavigate();
+  const { getCartItemsCount } = useCart();
 
   useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
     const currentUser = getCurrentUser();
-    if (currentUser) {
-      setUser({
-        name: currentUser.name || 'Guest',
-        points: currentUser.points || 0,
-        initials: currentUser.name ? currentUser.name.charAt(0).toUpperCase() : '?'
-      });
+    if (currentUser && currentUser.userId) {
+      try {
+        // Fetch fresh user data from API
+        const freshUserData = await getUserById(currentUser.userId);
+        const displayName = freshUserData.fullName || freshUserData.name || 'Guest';
+        setUser({
+          name: displayName,
+          points: freshUserData.pointsBalance || 0,
+          initials: displayName.charAt(0).toUpperCase()
+        });
+        
+        // Update localStorage with fresh data
+        localStorage.setItem('user', JSON.stringify({ ...currentUser, ...freshUserData }));
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Fallback to localStorage data
+        const displayName = currentUser.fullName || currentUser.name || 'Guest';
+        setUser({
+          name: displayName,
+          points: currentUser.pointsBalance || 0,
+          initials: displayName.charAt(0).toUpperCase()
+        });
+      }
     }
-  }, []); 
+  }; 
 
   const handleLogout = () => {
     logout();
@@ -63,7 +86,35 @@ const Header = () => {
             Points History
           </NavLink>
           
-          {/* 5. ADD THE LOGOUT BUTTON HERE */}
+          <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              isActive ? 'header-nav-item active' : 'header-nav-item'
+            }
+            style={{ position: 'relative' }}
+          >
+            🛒 Cart
+            {getCartItemsCount() > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-5px',
+                right: '-10px',
+                background: '#8B0000',
+                color: 'white',
+                borderRadius: '50%',
+                width: '20px',
+                height: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '12px',
+                fontWeight: 'bold'
+              }}>
+                {getCartItemsCount()}
+              </span>
+            )}
+          </NavLink>
+          
           <button onClick={handleLogout} className="header-logout-btn">
             Logout
           </button>
@@ -73,7 +124,6 @@ const Header = () => {
           <div className="header-user-info">
             <div className="header-user-details">
               <div className="header-user-name">{user.name}</div>
-              {/* Only show points if they are logged in */}
               {user.name !== 'Guest' && (
                 <div className="header-user-points">⭐ {user.points || 0} Points</div>
               )}

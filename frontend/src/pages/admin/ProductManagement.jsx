@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import productService from '../../services/productService';
 import categoryService from '../../services/categoryService';
+import Notification from '../../components/common/Notification';
+import { useNotification } from '../../hooks/useNotification';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { notification, showNotification, hideNotification } = useNotification();
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
@@ -33,7 +36,7 @@ const ProductManagement = () => {
       setCategories(categoriesData);
     } catch (error) {
       console.error('Error fetching data:', error);
-      alert('Failed to load data');
+      showNotification('Failed to load data', 'error');
     } finally {
       setLoading(false);
     }
@@ -63,17 +66,17 @@ const ProductManagement = () => {
 
       if (editingProduct) {
         await productService.updateProduct(editingProduct.productId, productData);
-        alert('Product updated successfully');
+        showNotification('Product updated successfully!', 'success');
       } else {
         await productService.createProduct(productData);
-        alert('Product created successfully');
+        showNotification('Product created successfully!', 'success');
       }
 
       resetForm();
       fetchData();
     } catch (error) {
       console.error('Error saving product:', error);
-      alert('Failed to save product');
+      showNotification(error.message || 'Failed to save product', 'error');
     }
   };
 
@@ -95,11 +98,11 @@ const ProductManagement = () => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         await productService.deleteProduct(id);
-        alert('Product deleted successfully');
+        showNotification('Product deleted successfully!', 'success');
         fetchData();
       } catch (error) {
         console.error('Error deleting product:', error);
-        alert('Failed to delete product');
+        showNotification(error.message || 'Failed to delete product', 'error');
       }
     }
   };
@@ -290,6 +293,14 @@ const ProductManagement = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {notification && (
+        <Notification 
+          message={notification.message} 
+          type={notification.type} 
+          onClose={hideNotification} 
+        />
       )}
     </div>
   );

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Notification from '../../components/common/Notification';
+import { useNotification } from '../../hooks/useNotification';
 
 // Mock data for the currently logged-in user
 // In a real app, you'd fetch this from your context or an API
@@ -54,13 +56,13 @@ const UserProfile = () => {
     e.preventDefault();
     // Add validation for passwords here
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("New passwords do not match!");
+      showNotification("New passwords do not match!", 'warning');
       return;
     }
     // API call to change password
     console.log('Password change requested:', passwordData);
     setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    alert('Password changed successfully (mocked)!');
+    showNotification('Password changed successfully!', 'success');
   };
 
   return (
@@ -222,6 +224,14 @@ const UserProfile = () => {
             </div>
          </form>
       </div>
+
+      {notification && (
+        <Notification 
+          message={notification.message} 
+          type={notification.type} 
+          onClose={hideNotification} 
+        />
+      )}
     </div>
   );
 };
