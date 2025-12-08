@@ -1,8 +1,8 @@
 import { api } from './api';
 
 const reservationService = {
-  async getAllReservations() {
-    return await api.get('/reservation');
+  async getAllReservations(archived = false) {
+    return await api.get(`/reservation?archived=${archived}`);
   },
 
   async getReservationsByUser(userId) {
@@ -31,6 +31,18 @@ const reservationService = {
 
   async deleteReservation(id) {
     return await api.delete(`/reservation/${id}`);
+  },
+
+  async archiveReservation(id) {
+    return await api.patch(`/reservation/${id}/archive`);
+  },
+
+  async unarchiveReservation(id) {
+    return await api.patch(`/reservation/${id}/unarchive`);
+  },
+
+  async archiveMultiple(ids) {
+    return await api.post('/reservation/archive-multiple', { ids });
   }
 };
 

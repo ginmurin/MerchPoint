@@ -47,7 +47,12 @@ public class UserService {
         
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
-        user.setPassword(userDetails.getPassword());
+        
+        // Only update password if provided
+        if (userDetails.getPassword() != null && !userDetails.getPassword().trim().isEmpty()) {
+            user.setPassword(userDetails.getPassword());
+        }
+        
         user.setRole(userDetails.getRole());
         user.setPointsBalance(userDetails.getPointsBalance());
         user.setFullName(userDetails.getFullName());

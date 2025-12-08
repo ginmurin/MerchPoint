@@ -30,6 +30,9 @@ public class Reservation {
     @Column(nullable = false, length = 20)
     private String status = "PENDING";
 
+    @Column(nullable = false)
+    private Boolean archived = false;
+
     @Column(name = "created_at", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
@@ -119,5 +122,13 @@ public class Reservation {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
     }
 }

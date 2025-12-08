@@ -31,7 +31,10 @@ public class ReservationController {
     private PointsTransactionRepository pointsTransactionRepository;
 
     @GetMapping
-    public List<Reservation> getAllReservations() {
+    public List<Reservation> getAllReservations(@RequestParam(required = false) Boolean archived) {
+        if (archived != null) {
+            return reservationRepository.findByArchivedOrderByCreatedAtDesc(archived);
+        }
         return reservationRepository.findAll();
     }
 
@@ -270,5 +273,52 @@ public class ReservationController {
         
         reservationRepository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<Reservation> archiveReservation(@PathVariable Long id) {
+        Optional<Reservation> reservationOpt = reservationRepository.findById(id);
+        if (!reservationOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        Reservation reservation = reservationOpt.get();
+        reservation.setArchived(true);
+        reservationRepository.save(reservation);
+        return ResponseEntity.ok(reservation);
+    }
+
+    @PatchMapping("/{id}/unarchive")
+    public ResponseEntity<Reservation> unarchiveReservation(@PathVariable Long id) {
+        Optional<Reservation> reservationOpt = reservationRepository.findById(id);
+        if (!reservationOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        Reservation reservation = reservationOpt.get();
+        reservation.setArchived(false);
+        reservationRepository.save(reservation);
+        return ResponseEntity.ok(reservation);
+    }
+
+    @PostMapping("/archive-multiple")
+    public ResponseEntity<Map<String, Object>> archiveMultipleReservations(@RequestBody Map<String, List<Long>> request) {
+        List<Long> ids = request.get("ids");
+        int archived = 0;
+        
+        for (Long id : ids) {
+            Optional<Reservation> reservationOpt = reservationRepository.findById(id);
+            if (reservationOpt.isPresent()) {
+                Reservation reservation = reservationOpt.get();
+                reservation.setArchived(true);
+                reservationRepository.save(reservation);
+                archived++;
+            }
+        }
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("archived", archived);
+        response.put("total", ids.size());
+        return ResponseEntity.ok(response);
     }
 }

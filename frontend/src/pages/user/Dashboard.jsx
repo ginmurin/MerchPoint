@@ -72,8 +72,11 @@ const Dashboard = () => {
       };
       setStats(statsData);
       
-      // Get recent reservations (last 5)
-      setRecentReservations(reservations.slice(0, 5));
+      // Sort by creation date descending (newest first) and get recent 5
+      const sortedReservations = [...reservations].sort((a, b) => 
+        new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setRecentReservations(sortedReservations.slice(0, 5));
     } catch (error) {
       console.error('Error fetching reservations:', error);
     }

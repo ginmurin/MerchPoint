@@ -14,10 +14,12 @@ const AdminReservations = () => {
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
   const { notification, showNotification, hideNotification } = useNotification();
   const [userCache, setUserCache] = useState({});
+  const [showArchived, setShowArchived] = useState(false);
+  const [selectedReservations, setSelectedReservations] = useState([]);
 
   useEffect(() => {
     fetchReservations();
-  }, []);
+  }, [showArchived]);
 
   useEffect(() => {
     applyFilters();
@@ -26,10 +28,10 @@ const AdminReservations = () => {
   const fetchReservations = async () => {
     try {
       setLoading(true);
-      const data = await reservationService.getAllReservations();
+      const data = await reservationService.getAllReservations(showArchived ? true : false);
       setReservations(data);
       
-      // Calculate stats
+      // Calculate stats based on current view (archived or active)
       const statsData = {
         total: data.length,
         pending: data.filter(r => r.status === 'PENDING').length,
@@ -96,6 +98,48 @@ const AdminReservations = () => {
     setStatusFilter(filter);
   };
 
+  const handleArchiveSelected = async () => {
+    if (selectedReservations.length === 0) {
+      showNotification('Please select reservations to archive', 'info');
+      return;
+    }
+
+    try {
+      await reservationService.archiveMultiple(selectedReservations);
+      showNotification(`${selectedReservations.length} reservation(s) archived successfully!`, 'success');
+      setSelectedReservations([]);
+      fetchReservations();
+    } catch (error) {
+      console.error('Error archiving reservations:', error);
+      showNotification('Failed to archive reservations', 'error');
+    }
+  };
+
+  const handleUnarchive = async (id) => {
+    try {
+      await reservationService.unarchiveReservation(id);
+      showNotification('Reservation unarchived successfully!', 'success');
+      fetchReservations();
+    } catch (error) {
+      console.error('Error unarchiving reservation:', error);
+      showNotification('Failed to unarchive reservation', 'error');
+    }
+  };
+
+  const toggleSelectReservation = (id) => {
+    setSelectedReservations(prev => 
+      prev.includes(id) ? prev.filter(resId => resId !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedReservations.length === filteredReservations.length) {
+      setSelectedReservations([]);
+    } else {
+      setSelectedReservations(filteredReservations.map(r => r.id));
+    }
+  };
+
   const handleSearch = () => {
     applyFilters();
   };
@@ -130,8 +174,9 @@ const AdminReservations = () => {
           />
           <button className="button button-primary" onClick={handleSearch}>Search</button>
         </div>
-        <div className="products-filter-bar">
-          <span className="products-filter-label">Filter by Status:</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+          <div className="products-filter-bar">
+            <span className="products-filter-label">Filter by Status:</span>
           <button 
             className={`products-filter-btn ${statusFilter === 'All' ? 'active' : ''}`}
             onClick={() => handleFilterClick('All')}
@@ -157,6 +202,30 @@ const AdminReservations = () => {
             Rejected
           </button>
         </div>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            {!showArchived && selectedReservations.length > 0 && (
+              <button 
+                className="button button-secondary"
+                onClick={handleArchiveSelected}
+                style={{ padding: '0.5rem 1rem' }}
+              >
+                Archive Selected ({selectedReservations.length})
+              </button>
+            )}
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+              <input 
+                type="checkbox" 
+                checked={showArchived}
+                onChange={(e) => {
+                  setShowArchived(e.target.checked);
+                  setSelectedReservations([]);
+                }}
+                style={{ cursor: 'pointer' }}
+              />
+              <span>Show Archived</span>
+            </label>
+          </div>
+        </div>
       </div>
 
       {loading ? (
@@ -165,6 +234,16 @@ const AdminReservations = () => {
         <table className="table">
           <thead>
             <tr>
+              {!showArchived && (
+                <th style={{ width: '50px' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={selectedReservations.length === filteredReservations.length && filteredReservations.length > 0}
+                    onChange={toggleSelectAll}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </th>
+              )}
               <th>Code</th>
               <th>User</th>
               <th>Date</th>
@@ -177,7 +256,7 @@ const AdminReservations = () => {
           <tbody>
             {filteredReservations.length === 0 ? (
               <tr>
-                <td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>
+                <td colSpan={showArchived ? "7" : "8"} style={{ textAlign: 'center', padding: '2rem' }}>
                   No reservations found
                 </td>
               </tr>
@@ -189,6 +268,16 @@ const AdminReservations = () => {
                 
                 return (
                   <tr key={reservation.id}>
+                    {!showArchived && (
+                      <td>
+                        <input 
+                          type="checkbox" 
+                          checked={selectedReservations.includes(reservation.id)}
+                          onChange={() => toggleSelectReservation(reservation.id)}
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </td>
+                    )}
                     <td><strong>{reservation.code}</strong></td>
                     <td>
                       {user.fullName || 'Unknown User'}
@@ -213,7 +302,15 @@ const AdminReservations = () => {
                       </span>
                     </td>
                     <td>
-                      {reservation.status === 'PENDING' ? (
+                      {showArchived ? (
+                        <button 
+                          className="button button-primary" 
+                          style={{ padding: '6px 12px', fontSize: '11px' }}
+                          onClick={() => handleUnarchive(reservation.id)}
+                        >
+                          Unarchive
+                        </button>
+                      ) : reservation.status === 'PENDING' ? (
                         <>
                           <button 
                             className="button button-primary" 

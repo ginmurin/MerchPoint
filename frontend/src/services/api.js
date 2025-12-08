@@ -57,6 +57,20 @@ export const api = {
     return handleResponse(response);
   },
 
+  patch: async (endpoint, data, token) => {
+    const url = `${BASE_URL}/${endpoint.startsWith('/') ? endpoint.slice(1) : endpoint}`;
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token || ''}`,
+        'X-User-Role': getUserRole(),
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    });
+    return handleResponse(response);
+  },
+
   delete: async (endpoint, token) => {
     const url = `${BASE_URL}/${endpoint.startsWith('/') ? endpoint.slice(1) : endpoint}`;
     const response = await fetch(url, {

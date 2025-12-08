@@ -295,7 +295,7 @@ const ProductManagement = () => {
         </div>
       )}
 
-      {notification && (
+      {notification.show && (
         <Notification 
           message={notification.message} 
           type={notification.type} 
