@@ -96,6 +96,15 @@ public class AuthController {
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
             }
             
+            // Check if student/staff ID already exists
+            if (user.getStudentStaffId() != null && !user.getStudentStaffId().isEmpty()) {
+                if (userService.existsByStudentStaffId(user.getStudentStaffId())) {
+                    Map<String, String> error = new HashMap<>();
+                    error.put("message", "ID Number already exists");
+                    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+                }
+            }
+            
             // Set default values
             if (user.getRole() == null || user.getRole().isEmpty()) {
                 user.setRole("user");

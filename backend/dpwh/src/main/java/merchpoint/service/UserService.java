@@ -79,4 +79,9 @@ public class UserService {
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
+
+    // Check if studentStaffId exists
+    public boolean existsByStudentStaffId(String studentStaffId) {
+        return userRepository.existsByStudentStaffId(studentStaffId);
+    }
 }

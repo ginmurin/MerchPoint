@@ -5,7 +5,7 @@ import { getUserById } from '../../services/userService';
 import { useCart } from '../../context/CartContext';
 
 const Header = () => {
-  const [user, setUser] = useState({ name: 'Guest', points: 0, initials: '?' });
+  const [user, setUser] = useState({ name: 'Guest', points: 0, initials: '?', profileImage: null });
   const navigate = useNavigate();
   const { getCartItemsCount } = useCart();
 
@@ -23,7 +23,8 @@ const Header = () => {
         setUser({
           name: displayName,
           points: freshUserData.pointsBalance || 0,
-          initials: displayName.charAt(0).toUpperCase()
+          initials: displayName.charAt(0).toUpperCase(),
+          profileImage: freshUserData.profileImage ? `http://localhost:8080/api/upload/profile-image/file/${freshUserData.profileImage}` : null
         });
         
         // Update localStorage with fresh data
@@ -35,7 +36,8 @@ const Header = () => {
         setUser({
           name: displayName,
           points: currentUser.pointsBalance || 0,
-          initials: displayName.charAt(0).toUpperCase()
+          initials: displayName.charAt(0).toUpperCase(),
+          profileImage: currentUser.profileImage ? `http://localhost:8080/api/upload/profile-image/file/${currentUser.profileImage}` : null
         });
       }
     }
@@ -128,7 +130,13 @@ const Header = () => {
                 <div className="header-user-points">⭐ {user.points || 0} Points</div>
               )}
             </div>
-            <div className="header-user-avatar">{user.initials}</div>
+            <div className="header-user-avatar" style={{
+              backgroundImage: user.profileImage ? `url(${user.profileImage})` : 'none',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}>
+              {!user.profileImage && user.initials}
+            </div>
           </div>
         </Link>
 

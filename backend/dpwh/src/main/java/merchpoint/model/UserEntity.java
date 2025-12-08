@@ -37,6 +37,9 @@ public class UserEntity {
     
     private String studentStaffId;
     
+    @Column(columnDefinition = "LONGTEXT")
+    private String profileImage;
+    
     @Column(nullable = false)
     private Integer pointsBalance = 0;
     
