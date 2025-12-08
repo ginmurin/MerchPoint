@@ -82,7 +82,7 @@ const ProductDetails = () => {
         <div className="product-details-info">
           <h1 className="product-details-name">{product.name}</h1>
           <div className="product-details-price">₱{product.price.toFixed(2)}</div>
-          <div className="product-details-points">⭐ Earn {product.points} reward points</div>
+          <div className="product-details-points">Earn {product.points} reward points</div>
           
           <div className="product-details-stock-box">
             <div className="product-details-stock-status"></div>
@@ -107,7 +107,7 @@ const ProductDetails = () => {
               onClick={handleAddToCart}
               disabled={product.stock === 0}
             >
-              🛒 Add to Cart
+              Add to Cart
             </button>
           </div>
           

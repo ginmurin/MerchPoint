@@ -27,15 +27,15 @@ public class ProductEntity {
     private Double price;
     
     @Column(nullable = false)
-    private Integer pointsRequired;
-    
-    @Column(nullable = false)
     private Integer pointsValue;
     
     @Column(nullable = false)
     private Integer stockQuantity;
     
     private String imageUrl;
+    
+    @Column(nullable = false)
+    private Boolean isAvailable = true;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
@@ -47,8 +47,22 @@ public class ProductEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
     
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        calculatePointsValue();
+    }
+    
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+        calculatePointsValue();
+    }
+    
+    private void calculatePointsValue() {
+        if (this.price != null) {
+            this.pointsValue = (int) Math.round(this.price * 0.20);
+        }
     }
 }

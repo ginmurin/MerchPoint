@@ -5,7 +5,7 @@ const AdminProducts = () => {
     <div className="container">
       <div className="admin-page-header">
         <h1 className="admin-title">Product Management</h1>
-        <button className="button button-primary">➕ Add New Product</button>
+        <button className="button button-primary">Add New Product</button>
       </div>
 
       <div className="products-search-section">

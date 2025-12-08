@@ -56,7 +56,7 @@ const AdminDashboard = () => {
         <h1 className="admin-title">Admin Dashboard</h1>
         <div style={{ display: 'flex', gap: '1rem' }}>
           <Link to="/admin/products" className="button button-primary">
-            ➕ Manage Products
+            Manage Products
           </Link>
           <Link to="/admin/user-list" className="button button-secondary">
             👥 View Users
@@ -113,7 +113,7 @@ const AdminDashboard = () => {
             <div className="admin-card">
               <h3 className="admin-card-title">⚡ Quick Actions</h3>
               <Link to="/admin/products" className="button button-primary" style={{ width: '100%', marginBottom: '10px', textAlign: 'center', display: 'block', textDecoration: 'none' }}>
-                ➕ Add New Product
+                Add New Product
               </Link>
               <Link to="/admin/user-list" className="button button-secondary" style={{ width: '100%', textAlign: 'center', display: 'block', textDecoration: 'none' }}>
                 👥 View Users

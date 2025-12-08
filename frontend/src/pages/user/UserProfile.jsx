@@ -12,7 +12,8 @@ const UserProfile = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [formData, setFormData] = useState({
     email: '',
-    username: ''
+    username: '',
+    phoneNumber: ''
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -33,7 +34,8 @@ const UserProfile = () => {
         setUser(freshUserData);
         setFormData({ 
           email: freshUserData.email || '',
-          username: freshUserData.username || ''
+          username: freshUserData.username || '',
+          phoneNumber: freshUserData.phoneNumber || ''
         });
         if (freshUserData.profileImage) {
           setImagePreview(`http://localhost:8080/api/upload/profile-image/file/${freshUserData.profileImage}`);
@@ -74,6 +76,10 @@ const UserProfile = () => {
   const handleUsernameChange = (e) => {
     setFormData(prev => ({ ...prev, username: e.target.value }));
   };
+
+  const handlePhoneNumberChange = (e) => {
+    setFormData(prev => ({ ...prev, phoneNumber: e.target.value }));
+  };
   
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +97,9 @@ const UserProfile = () => {
       // Update local storage
       const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
       localStorage.setItem('user', JSON.stringify({ ...storedUser, username: formData.username }));
+      
+      // Trigger header refresh
+      window.dispatchEvent(new Event('userUpdated'));
       
       showNotification('Username updated successfully!', 'success');
       fetchUserData();
@@ -112,11 +121,37 @@ const UserProfile = () => {
       const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
       localStorage.setItem('user', JSON.stringify({ ...storedUser, email: formData.email }));
       
+      // Trigger header refresh
+      window.dispatchEvent(new Event('userUpdated'));
+      
       showNotification('Email updated successfully!', 'success');
       fetchUserData();
     } catch (error) {
       console.error('Error updating email:', error);
       showNotification(error.message || 'Failed to update email', 'error');
+    }
+  };
+
+  const handlePhoneNumberSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await api.put(`user/${user.userId}`, {
+        ...user,
+        phoneNumber: formData.phoneNumber
+      });
+      
+      // Update local storage
+      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+      localStorage.setItem('user', JSON.stringify({ ...storedUser, phoneNumber: formData.phoneNumber }));
+      
+      // Trigger header refresh
+      window.dispatchEvent(new Event('userUpdated'));
+      
+      showNotification('Phone number updated successfully!', 'success');
+      fetchUserData();
+    } catch (error) {
+      console.error('Error updating phone number:', error);
+      showNotification(error.message || 'Failed to update phone number', 'error');
     }
   };
 
@@ -151,6 +186,9 @@ const UserProfile = () => {
       
       const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
       localStorage.setItem('user', JSON.stringify({ ...storedUser, profileImage: data.filename }));
+      
+      // Trigger header refresh
+      window.dispatchEvent(new Event('userUpdated'));
       
       setProfileImage(null);
     } catch (error) {
@@ -336,6 +374,28 @@ const UserProfile = () => {
           <div className="profile-button-group">
             <button type="submit" className="button button-primary">
               Update Email
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Phone Number Card */}
+      <div className="profile-card">
+        <h3 className="profile-subtitle">Phone Number</h3>
+        <form onSubmit={handlePhoneNumberSubmit}>
+          <div className="login-form-group">
+            <label className="login-label">Phone Number</label>
+            <input
+              type="tel"
+              className="input"
+              value={formData.phoneNumber}
+              onChange={handlePhoneNumberChange}
+              placeholder="Enter your phone number"
+            />
+          </div>
+          <div className="profile-button-group">
+            <button type="submit" className="button button-primary">
+              Update Phone Number
             </button>
           </div>
         </form>

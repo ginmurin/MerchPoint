@@ -32,10 +32,10 @@ const ProductCard = ({ product }) => {
         <div className="product-card-info">
           <h3 className="product-card-name">{product.productName}</h3>
           <div className="product-card-price">₱{product.price.toFixed(2)}</div>
-          <div className="product-card-points">⭐ Earn {product.pointsRequired} points</div>
+          <div className="product-card-points">Earn {product.pointsValue || 0} points</div>
           <div className="product-card-stock">
             {product.stockQuantity > 0 ? (
-              `✓ ${product.stockQuantity} in stock`
+              `${product.stockQuantity} in stock`
             ) : (
               <span style={{ color: '#d32f2f' }}>Out of Stock</span>
             )}

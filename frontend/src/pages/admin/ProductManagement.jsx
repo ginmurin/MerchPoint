@@ -15,10 +15,10 @@ const ProductManagement = () => {
     productName: '',
     description: '',
     price: '',
-    pointsRequired: '',
     stockQuantity: '',
     imageUrl: '',
-    categoryId: ''
+    categoryId: '',
+    isAvailable: true
   });
 
   useEffect(() => {
@@ -57,10 +57,10 @@ const ProductManagement = () => {
         productName: formData.productName,
         description: formData.description || '',
         price: parseFloat(formData.price),
-        pointsRequired: parseInt(formData.pointsRequired),
-        pointsValue: parseInt(formData.pointsRequired),
+        // pointsValue is auto-calculated as 20% of price on the backend
         stockQuantity: parseInt(formData.stockQuantity),
         imageUrl: formData.imageUrl || '',
+        isAvailable: formData.isAvailable,
         category: { categoryId: parseInt(formData.categoryId) }
       };
 
@@ -86,10 +86,10 @@ const ProductManagement = () => {
       productName: product.productName,
       description: product.description || '',
       price: product.price.toString(),
-      pointsRequired: product.pointsRequired.toString(),
       stockQuantity: product.stockQuantity.toString(),
       imageUrl: product.imageUrl || '',
-      categoryId: product.category?.categoryId?.toString() || ''
+      categoryId: product.category?.categoryId?.toString() || '',
+      isAvailable: product.isAvailable !== undefined ? product.isAvailable : true
     });
     setShowModal(true);
   };
@@ -107,15 +107,33 @@ const ProductManagement = () => {
     }
   };
 
+  const handleToggleAvailability = async (product) => {
+    try {
+      const updatedProduct = {
+        ...product,
+        isAvailable: !product.isAvailable
+      };
+      await productService.updateProduct(product.productId, updatedProduct);
+      showNotification(
+        `Product ${updatedProduct.isAvailable ? 'enabled' : 'disabled'} successfully!`, 
+        'success'
+      );
+      fetchData();
+    } catch (error) {
+      console.error('Error toggling availability:', error);
+      showNotification(error.message || 'Failed to update product', 'error');
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       productName: '',
       description: '',
       price: '',
-      pointsRequired: '',
       stockQuantity: '',
       imageUrl: '',
-      categoryId: ''
+      categoryId: '',
+      isAvailable: true
     });
     setEditingProduct(null);
     setShowModal(false);
@@ -126,7 +144,7 @@ const ProductManagement = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h1 className="admin-title">Product Management</h1>
         <button className="button button-primary" onClick={() => setShowModal(true)}>
-          ➕ Add Product
+          Add Product
         </button>
       </div>
 
@@ -143,6 +161,7 @@ const ProductManagement = () => {
                 <th>Price</th>
                 <th>Points</th>
                 <th>Stock</th>
+                <th>Available</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -154,7 +173,7 @@ const ProductManagement = () => {
                     <td><strong>{product.productName}</strong></td>
                     <td>{product.category?.categoryName || 'N/A'}</td>
                     <td>₱{product.price.toFixed(2)}</td>
-                    <td>{product.pointsRequired}</td>
+                    <td>{product.pointsValue || 0}</td>
                     <td>
                       <span className={`status-badge ${
                         product.stockQuantity < 5 ? 'status-rejected' :
@@ -166,25 +185,41 @@ const ProductManagement = () => {
                     </td>
                     <td>
                       <button
+                        className={`status-badge ${
+                          product.isAvailable ? 'status-approved' : 'status-rejected'
+                        }`}
+                        onClick={() => handleToggleAvailability(product)}
+                        style={{ 
+                          cursor: 'pointer',
+                          border: 'none',
+                          transition: 'all 0.2s'
+                        }}
+                        title={`Click to ${product.isAvailable ? 'disable' : 'enable'}`}
+                      >
+                        {product.isAvailable ? 'Yes' : 'No'}
+                      </button>
+                    </td>
+                    <td>
+                      <button
                         className="button button-secondary"
                         style={{ marginRight: '0.5rem', padding: '0.3rem 0.8rem' }}
                         onClick={() => handleEdit(product)}
                       >
-                        ✏️ Edit
+                        Edit
                       </button>
                       <button
                         className="button button-secondary"
                         style={{ padding: '0.3rem 0.8rem' }}
                         onClick={() => handleDelete(product.productId)}
                       >
-                        🗑️ Delete
+                        Delete
                       </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>
+                  <td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>
                     No products found
                   </td>
                 </tr>
@@ -256,16 +291,18 @@ const ProductManagement = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="pointsRequired">Points Required *</label>
+                  <label htmlFor="pointsValue">Points Value</label>
                   <input
                     type="number"
-                    id="pointsRequired"
-                    name="pointsRequired"
-                    value={formData.pointsRequired}
-                    onChange={handleInputChange}
-                    min="0"
-                    required
+                    id="pointsValue"
+                    name="pointsValue"
+                    value={formData.price ? Math.round(parseFloat(formData.price) * 0.20) : 0}
+                    readOnly
+                    style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
                   />
+                  <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                    Auto-calculated as 20% of price
+                  </small>
                 </div>
               </div>
 
@@ -280,6 +317,22 @@ const ProductManagement = () => {
                   min="0"
                   required
                 />
+              </div>
+
+              <div className="form-group">
+                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}>
+                  <input
+                    type="checkbox"
+                    name="isAvailable"
+                    checked={formData.isAvailable}
+                    onChange={(e) => setFormData({ ...formData, isAvailable: e.target.checked })}
+                    style={{ marginRight: '8px', width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  <span>Product is available for purchase</span>
+                </label>
+                <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                  Unchecking this will hide the product from customers
+                </small>
               </div>
 
               <div className="modal-actions">

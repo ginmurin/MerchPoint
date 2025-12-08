@@ -36,10 +36,10 @@ public class ProductService {
         product.setProductName(productDetails.getProductName());
         product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
-        product.setPointsRequired(productDetails.getPointsRequired());
-        product.setPointsValue(productDetails.getPointsValue());
+        // pointsValue is now auto-calculated in @PreUpdate based on price
         product.setStockQuantity(productDetails.getStockQuantity());
         product.setImageUrl(productDetails.getImageUrl());
+        product.setIsAvailable(productDetails.getIsAvailable());
         product.setCategory(productDetails.getCategory());
         
         return productRepository.save(product);

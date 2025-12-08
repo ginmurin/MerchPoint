@@ -58,8 +58,8 @@ public class RoleAuthFilter implements Filter {
             return true;
         }
         
-        // User management - only admin can access
-        if (path.contains("/api/user") && !"POST".equals(method)) {
+        // User management - only admin can access (except PUT for profile update)
+        if (path.contains("/api/user") && !"POST".equals(method) && !"PUT".equals(method)) {
             return true;
         }
         

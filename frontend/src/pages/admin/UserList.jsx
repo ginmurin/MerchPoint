@@ -108,7 +108,7 @@ const UserList = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h1 className="admin-title">User List</h1>
         <button className="button button-primary" onClick={handleAddUser}>
-          ➕ Add User
+          Add User
         </button>
       </div>
 
@@ -148,14 +148,14 @@ const UserList = () => {
                         style={{ marginRight: '0.5rem', padding: '0.3rem 0.8rem' }}
                         onClick={() => handleEditUser(user)}
                       >
-                        ✏️ Edit
+                        Edit
                       </button>
                       <button
                         className="button button-secondary"
                         style={{ padding: '0.3rem 0.8rem' }}
                         onClick={() => handleDeleteUser(user.userId)}
                       >
-                        🗑️ Delete
+                        Delete
                       </button>
                     </td>
                   </tr>

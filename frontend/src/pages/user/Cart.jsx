@@ -78,6 +78,9 @@ const Cart = () => {
       const updatedUser = await getUserById(user.userId);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       
+      // Trigger header refresh
+      window.dispatchEvent(new Event('userUpdated'));
+      
       clearCart();
       setPointsToRedeem(0);
       
@@ -161,7 +164,7 @@ const Cart = () => {
             </div>
             <div className="cart-summary-row">
               <span>Points to Earn:</span>
-              <span className="cart-summary-points-earn">⭐ {pointsToEarn} points</span>
+              <span className="cart-summary-points-earn">{pointsToEarn} points</span>
             </div>
             
             <div className="cart-summary-redeem-box">

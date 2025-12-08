@@ -11,6 +11,26 @@ const Header = () => {
 
   useEffect(() => {
     fetchUserData();
+
+    // Listen for storage changes (from other tabs/windows)
+    const handleStorageChange = (e) => {
+      if (e.key === 'user') {
+        fetchUserData();
+      }
+    };
+
+    // Listen for custom user update events (from same tab)
+    const handleUserUpdate = () => {
+      fetchUserData();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('userUpdated', handleUserUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('userUpdated', handleUserUpdate);
+    };
   }, []);
 
   const fetchUserData = async () => {
@@ -95,7 +115,7 @@ const Header = () => {
             }
             style={{ position: 'relative' }}
           >
-            🛒 Cart
+            Cart
             {getCartItemsCount() > 0 && (
               <span style={{
                 position: 'absolute',
@@ -127,7 +147,7 @@ const Header = () => {
             <div className="header-user-details">
               <div className="header-user-name">{user.name}</div>
               {user.name !== 'Guest' && (
-                <div className="header-user-points">⭐ {user.points || 0} Points</div>
+                <div className="header-user-points">{user.points || 0} Points</div>
               )}
             </div>
             <div className="header-user-avatar" style={{

@@ -47,6 +47,9 @@ const Dashboard = () => {
       const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
       localStorage.setItem('user', JSON.stringify({ ...currentUser, ...freshUserData }));
       
+      // Trigger header refresh
+      window.dispatchEvent(new Event('userUpdated'));
+      
       // Fetch reservations
       await fetchReservations(userId);
     } catch (error) {

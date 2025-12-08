@@ -24,7 +24,9 @@ const Products = () => {
         productService.getAllProducts(),
         categoryService.getAllCategories()
       ]);
-      setProducts(productsData);
+      // Filter to show only available products to customers
+      const availableProducts = productsData.filter(p => p.isAvailable !== false);
+      setProducts(availableProducts);
       setCategories(categoriesData);
     } catch (error) {
       console.error('Error fetching data:', error);
