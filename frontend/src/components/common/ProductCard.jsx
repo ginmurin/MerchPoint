@@ -35,9 +35,9 @@ const ProductCard = ({ product }) => {
           <div className="product-card-points">Earn {product.pointsValue || 0} points</div>
           <div className="product-card-stock">
             {product.stockQuantity > 0 ? (
-              `${product.stockQuantity} in stock`
+              <span style={{ color: '#28a745', fontWeight: '500' }}>{product.stockQuantity} in stock</span>
             ) : (
-              <span style={{ color: '#d32f2f' }}>Out of Stock</span>
+              <span style={{ color: '#d32f2f', fontWeight: 'bold' }}>Out of Stock</span>
             )}
           </div>
         </div>

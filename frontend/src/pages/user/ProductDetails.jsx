@@ -35,7 +35,7 @@ const ProductDetails = () => {
   const handleAddToCart = () => {
     if (!product) return;
 
-    if (product.stock < quantity) {
+    if (product.stockQuantity < quantity) {
       showNotification('Not enough stock available', 'warning');
       return;
     }
@@ -46,7 +46,7 @@ const ProductDetails = () => {
     }
 
     addToCart(product, quantity);
-    showNotification(`Added ${quantity} ${product.name} to cart!`, 'success');
+    showNotification(`Added ${quantity} ${product.productName} to cart!`, 'success');
     setQuantity(1);
   };
 
@@ -60,7 +60,7 @@ const ProductDetails = () => {
 
   return (
     <div className="container">
-      {notification && (
+      {notification.show && (
         <Notification
           message={notification.message}
           type={notification.type}
@@ -80,13 +80,16 @@ const ProductDetails = () => {
         </div>
         
         <div className="product-details-info">
-          <h1 className="product-details-name">{product.name}</h1>
+          <h1 className="product-details-name">{product.productName}</h1>
           <div className="product-details-price">₱{product.price.toFixed(2)}</div>
-          <div className="product-details-points">Earn {product.points} reward points</div>
+          <div className="product-details-points">Earn {product.pointsValue || 0} reward points</div>
           
-          <div className="product-details-stock-box">
-            <div className="product-details-stock-status"></div>
-            <span>{product.stock} units available</span>
+          <div style={{ marginBottom: '1.5rem' }}>
+            {product.stockQuantity > 0 ? (
+              <span style={{ color: '#28a745', fontSize: '14px', fontWeight: '500' }}>{product.stockQuantity} units available</span>
+            ) : (
+              <span style={{ color: '#d32f2f', fontSize: '14px', fontWeight: 'bold' }}>Out of Stock</span>
+            )}
           </div>
 
           <div className="product-details-actions">
@@ -99,15 +102,15 @@ const ProductDetails = () => {
                 value={quantity}
                 onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
                 min="1" 
-                max={product.stock} 
+                max={product.stockQuantity} 
               />
             </div>
             <button 
               className="button button-primary product-details-add-btn"
               onClick={handleAddToCart}
-              disabled={product.stock === 0}
+              disabled={product.stockQuantity === 0}
             >
-              Add to Cart
+              {product.stockQuantity > 0 ? 'Add to Cart' : 'Out of Stock'}
             </button>
           </div>
           

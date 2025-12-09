@@ -145,14 +145,25 @@ public class ReservationController {
             reservation.setStatus("PENDING");
             reservation = reservationRepository.save(reservation);
 
-            // Create reservation items
+            // Create reservation items and update product stock
             for (Map<String, Object> itemData : items) {
+                Long productId = Long.valueOf(itemData.get("productId").toString());
+                Integer quantity = Integer.valueOf(itemData.get("quantity").toString());
+                
                 ReservationItem item = new ReservationItem();
                 item.setReservationId(reservation.getId());
-                item.setProductId(Long.valueOf(itemData.get("productId").toString()));
-                item.setQuantity(Integer.valueOf(itemData.get("quantity").toString()));
+                item.setProductId(productId);
+                item.setQuantity(quantity);
                 item.setPrice(Double.valueOf(itemData.get("price").toString()));
                 reservationItemRepository.save(item);
+                
+                // Update product stock
+                Optional<ProductEntity> productOpt = productRepository.findById(productId);
+                if (productOpt.isPresent()) {
+                    ProductEntity product = productOpt.get();
+                    product.setStockQuantity(product.getStockQuantity() - quantity);
+                    productRepository.save(product);
+                }
             }
 
             // Update user points
@@ -251,6 +262,19 @@ public class ReservationController {
                 transaction.setDescription("Points refunded from " + reservation.getCode());
                 transaction.setReservationId(reservation.getId());
                 pointsTransactionRepository.save(transaction);
+            }
+            
+            // If rejected, restore product stock
+            if ("REJECTED".equals(newStatus) && !"REJECTED".equals(oldStatus)) {
+                List<ReservationItem> items = reservationItemRepository.findByReservationId(reservation.getId());
+                for (ReservationItem item : items) {
+                    Optional<ProductEntity> productOpt = productRepository.findById(item.getProductId());
+                    if (productOpt.isPresent()) {
+                        ProductEntity product = productOpt.get();
+                        product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                        productRepository.save(product);
+                    }
+                }
             }
             
             userRepository.save(user);
